@@ -1,0 +1,306 @@
+<!DOCTYPE HTML>
+<html>
+<!--
+        Combustion Calculator
+        Co-created with Kelly Lang, February 2019
+    -->
+
+<head>
+    <style>
+        .rainbow {
+            -webkit-animation: rainbow 2s infinite;
+
+            -ms-animation: rainbow 2s infinite;
+
+            animation: rainbow 2s infinite;
+            padding: 7px;
+            text-align: center;
+            background: #000;
+        }
+
+        @-webkit-keyframes rainbow {
+            0% {
+                color: red;
+            }
+
+            10% {
+                color: orange;
+            }
+
+            20% {
+                color: yellow;
+            }
+
+            30% {
+                color: #00ce18;
+            }
+
+            40% {
+                color: #009e76;
+            }
+
+            50% {
+                color: #005c9e;
+            }
+
+            60% {
+                color: blue;
+            }
+
+            70% {
+                color: #7b00ff;
+            }
+
+            80% {
+                color: #9100e0;
+            }
+
+            90% {
+                color: #ca00d8;
+            }
+
+            100% {
+                color: red;
+            }
+        }
+
+        @-ms-keyframes rainbow {
+            0% {
+                color: red;
+            }
+
+            10% {
+                color: orange;
+            }
+
+            20% {
+                color: yellow;
+            }
+
+            30% {
+                color: #00ce18;
+            }
+
+            40% {
+                color: #009e76;
+            }
+
+            50% {
+                color: #005c9e;
+            }
+
+            60% {
+                color: blue;
+            }
+
+            70% {
+                color: #7b00ff;
+            }
+
+            80% {
+                color: #9100e0;
+            }
+
+            90% {
+                color: #ca00d8;
+            }
+
+            100% {
+                color: red;
+            }
+        }
+
+        @keyframes rainbow {
+            0% {
+                color: red;
+            }
+
+            10% {
+                color: orange;
+            }
+
+            20% {
+                color: yellow;
+            }
+
+            30% {
+                color: #00ce18;
+            }
+
+            40% {
+                color: #009e76;
+            }
+
+            50% {
+                color: #005c9e;
+            }
+
+            60% {
+                color: blue;
+            }
+
+            70% {
+                color: #7b00ff;
+            }
+
+            80% {
+                color: #9100e0;
+            }
+
+            90% {
+                color: #ca00d8;
+            }
+
+            100% {
+                color: red;
+            }
+        }
+
+        a:link {
+            color: #7b00ff;
+        }
+
+        a:visited {
+            color: #7b00ff;
+        }
+
+        a:hover {
+            color: magenta;
+        }
+
+        a:active {
+            color: aqua;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='rainbow'>
+        <font size='5' face='courier new'><b><u>THE WORLD'S BEST COMBUSTION CALCULATOR</u></b> &#9786;</font>
+    </div>
+    <p>This program outputs a balanced complete or incomplete combustion reaction, given a hydrocarbon.</p>
+
+    <b>
+        <div class='rainbow'>
+            <font size='4' face='courier new'>INSTRUCTIONS:</font>
+        </div>
+    </b>
+    <p>Please enter the chemical formula for a hydrocarbon, in proper formatting. Only the elements hydrogen, carbon,
+        and oxygen are accepted.</p>
+
+    <input id='inp' />
+    <button onclick='boom(true)'>Complete combustion</button>
+    <button onclick='boom(false)'>Incomplete combustion</button>
+    <p id='outp'></p>
+
+
+    <script>
+        var congrats = "<p><div class = 'rainbow'><font face = 'courier new'><b>Congratulations! Here's your equation!</b></font></div></p>";
+        var thanks = "<p><font color = #7b00ff size = '2'><b>Thanks for using the world's best combustion calculator!";
+
+        function boom(isComplete) {
+            document.getElementById('outp').innerHTML = "";
+            var inp = document.getElementById('inp').value;
+            var cs = 0;
+            var hs = 0;
+            var os = 0;
+            var last = "";
+            var dead = false;
+            for (var i = 0; i < inp.length; i++) {
+                if (inp.charAt(i) == 'C') {
+                    cs++;
+                    last = "C";
+                } else if (inp.charAt(i) == 'H') {
+                    hs++;
+                    last = "H";
+                } else if (inp.charAt(i) == 'O') {
+                    os++;
+                    last = "O";
+                } else if (!(last == "num")) {
+                    var num = "";
+                    if (last == "C") {
+                        cs--;
+                    } else if (last == "H") {
+                        hs--;
+                    } else {
+                        os--;
+                    }
+                    for (var j = 0; j < inp.length - i; j++) {
+                        if (inp.charAt(i + j) != 'H' && inp.charAt(i + j) != 'O' && inp.charAt(i + j) != 'C') {
+                            num += "" + inp.charAt(i + j);
+                        } else {
+                            break;
+                        }
+                    }
+                    if (last == "C") {
+                        cs += parseInt(num);
+                    } else if (last == "H") {
+                        hs += parseInt(num);
+                    } else {
+                        os += parseInt(num);
+                    }
+                    last = "num";
+                } else if (isNaN(parseInt(inp.charAt(i)))) {
+                    dead = true;
+                    break;
+                }
+            }
+            for (var i = 0; i < inp.length; i++) {
+                if (!isNaN(inp.charAt(i))) {
+                    inp = inp.substring(0, i) + "<sub>" + inp.charAt(i) + "</sub>" + inp.substring(i + 1);
+                    i += 11;
+                }
+            }
+            if (!dead) {
+                var a = 1;
+                var c = cs;
+                var d = hs / 2;
+                if (isComplete) {
+                    var b = (((2 * c) + d) - (a * os)) / 2;
+                } else {
+                    var b = ((c + d) - (a * os)) / 2;
+                }
+                while (Math.ceil(b) != Math.floor(b) || Math.ceil(d) != Math.floor(d)) {
+                    a *= 2;
+                    b *= 2;
+                    c *= 2;
+                    d *= 2;
+                }
+                if (a <= 0 || b <= 0 || c <= 0 || d <= 0) {
+                    document.getElementById('outp').innerHTML = ("Impossible");
+                } else {
+                    if (a != 1) {
+                        document.getElementById('outp').innerHTML += a;
+                    }
+                    document.getElementById('outp').innerHTML += inp + " + ";
+                    if (b != 1) {
+                        document.getElementById('outp').innerHTML += b;
+                    }
+                    document.getElementById('outp').innerHTML += "O<sub>2</sub> -> ";
+                    if (c != 1) {
+                        document.getElementById('outp').innerHTML += c;
+                    }
+                    if (isComplete) {
+                        document.getElementById('outp').innerHTML += "CO<sub>2</sub> + ";
+                    } else {
+                        document.getElementById('outp').innerHTML += "CO + ";
+                    }
+                    if (d != 1) {
+                        document.getElementById('outp').innerHTML += d;
+                    }
+                    document.getElementById('outp').innerHTML += "H<sub>2</sub>O";
+                }
+
+                document.getElementById('outp').innerHTML += (congrats);
+                document.getElementById('outp').innerHTML += (thanks);
+
+            } else {
+                document.getElementById('outp').innerHTML += "That's not a hydrocarbon! Please read the instructions carefully, then try again.";
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>
